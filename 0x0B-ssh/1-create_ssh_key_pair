@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Prompt the user to enter the passphrase
+read -s -p "Enter passphrase for RSA key pair: " passphrase
+echo
+
+# Generate RSA key pair with 4096 bits and protect it with the passphrase
+ssh-keygen -t rsa -b 4096 -N "$passphrase" -f ~/.ssh/school
+
+echo "RSA key pair successfully generated."
