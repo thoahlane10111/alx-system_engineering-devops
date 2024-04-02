@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Check Nginx status
+nginx_status=$(service nginx status)
+if [[ $nginx_status =~ "active (running)" ]]; then
+    echo "Nginx is running."
+else
+    echo "Nginx is not running. Starting Nginx..."
+    service nginx start
+fi
+
+# Check if port 80 is listening
+port_status=$(netstat -tuln | grep ":80")
+if [[ -n $port_status ]]; then
+    echo "Port 80 is already in use."
+else
+    echo "Port 80 is not in use. Restarting Nginx..."
+    service nginx restart
+fi
+
+# Check if Nginx is listening on port 80
+nginx_listen=$(netstat -tuln | grep ":80")
+if [[ -n $nginx_listen ]]; then
+    echo "Nginx is listening on port 80."
+else
+    echo "Nginx is not listening on port 80."
+fi
