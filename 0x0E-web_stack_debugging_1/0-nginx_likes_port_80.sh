@@ -13,7 +13,8 @@ if [ "$nginx_status" != "active" ]; then
     echo "Nginx service is not running. Starting..."
     systemctl start nginx
     sleep 2  # Give some time for Nginx to start
-    if [ "$(systemctl is-active nginx)" != "active" ]; then
+    nginx_status=$(systemctl is-active nginx)  # Update nginx status
+    if [ "$nginx_status" != "active" ]; then
         echo "Failed to start Nginx service. Exiting..."
         exit 1
     fi
@@ -28,10 +29,9 @@ fi
 
 # Modify Nginx configuration to listen on port 80
 if ! grep -q "listen 80;" "$nginx_config"; then
-    sed -i 's/listen\s*\(.*\);/listen 80;/g' "$nginx_config"
+    sed -i 's/\(^\s*\)listen\s*\(.*\);/\1listen 80;/g' "$nginx_config"
 fi
 
 # Restart Nginx service
 systemctl restart nginx
 echo "Nginx is now listening on port 80."
-
