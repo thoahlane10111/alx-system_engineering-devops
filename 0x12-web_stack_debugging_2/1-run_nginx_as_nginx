@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Remove any existing nginx installation
+apt-get remove nginx nginx-common -y
+
+# Install nginx
+apt-get update
+apt-get install nginx -y
+
+# Replace user directive in nginx configuration
+sed -i 's/user www-data/user nginx/' /etc/nginx/nginx.conf
+
+# Modify nginx default site configuration to listen on port 8080 and all IPs
+sed -i 's/listen 80;/listen 8080;/g' /etc/nginx/sites-available/default
+
+# Restart nginx service to apply changes
+service nginx restart
